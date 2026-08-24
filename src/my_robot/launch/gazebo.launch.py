@@ -90,10 +90,19 @@ def generate_launch_description():
             }
         ]
     )
-
+# ---------------------------------------------
+    # NOUVEAU : Nœud pour lancer RViz2
+    # ---------------------------------------------
+    rvizNode = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen'
+    )
 
     return LaunchDescription([
         gazeboLaunch,
         spawnModelNode,
-        nodeRobotStatePublisher
+        nodeRobotStatePublisher,
+        rvizNode
     ])

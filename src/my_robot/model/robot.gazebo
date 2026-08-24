@@ -118,6 +118,75 @@
     </plugin>
 
   </gazebo>
+<!-- ===================== -->
+  <!-- Plugin LiDAR -->
+  <!-- ===================== -->
+  <gazebo reference="lidar_link">
+    <material>Gazebo/Black</material>
+    <sensor type="ray" name="lidar_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <!-- Affiche les rayons laser en bleu dans Gazebo pour le débogage -->
+      <visualize>true</visualize>
+      <update_rate>10.0</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <!-- 360 échantillons pour un tour complet -->
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.15</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
 
+  <!-- ===================== -->
+  <!-- Plugin Caméra -->
+  <!-- ===================== -->
+  <gazebo reference="camera_link">
+    <material>Gazebo/Blue</material>
+    <sensor type="camera" name="camera_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>30.0</update_rate>
+      <camera>
+        <!-- Champ de vision -->
+        <horizontal_fov>1.089</horizontal_fov>
+        <image>
+          <!-- Résolution classique pour de la vision par ordinateur -->
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+      <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/image_raw:=camera/image_raw</remapping>
+        </ros>
+        <camera_name>camera</camera_name>
+        <frame_name>camera_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
 
 </robot>
