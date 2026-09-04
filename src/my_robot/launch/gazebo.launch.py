@@ -1,108 +1,177 @@
 import os
+
 import xacro
 
+from ament_index_python.packages import get_package_share_directory
+
 from launch import LaunchDescription
+
 from launch.actions import IncludeLaunchDescription
 
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
 
-from ament_index_python.packages import get_package_share_directory
-
 
 def generate_launch_description():
 
-    # Nom du robot (doit correspondre au xacro)
-    robotXacroName = 'differential_drive_robot'
+    # ======================================================
+    # Package
+    # ======================================================
 
-    # Nom du package
-    namePackage = 'my_robot'
+    package_name = "my_robot"
 
-    # Chemin relatif du fichier xacro
-    modelFileRelativePath = 'model/robot.xacro'
-
-    # Chemin relatif du monde Gazebo
-    worldFileRelativePath = 'model/empty_world.world'
+    package_path = get_package_share_directory(package_name)
 
 
-    # Chemin absolu du world
-    pathWorldFile = os.path.join(
-        get_package_share_directory(namePackage),
-        worldFileRelativePath
+    # ======================================================
+    # Robot Xacro
+    # ======================================================
+
+    xacro_file = os.path.join(
+        package_path,
+        "model",
+        "robot.xacro"
     )
 
-
-    # Chemin absolu du fichier xacro
-    pathModelFile = os.path.join(
-        get_package_share_directory(namePackage),
-        modelFileRelativePath
-    )
-
-
-    # Conversion xacro en URDF
-    robotDescription = xacro.process_file(
-        pathModelFile
+    robot_description = xacro.process_file(
+        xacro_file
     ).toxml()
 
 
-    # Lancement Gazebo Classic
-    gazebo_rosPackageLaunch = PythonLaunchDescriptionSource(
-        os.path.join(
-            get_package_share_directory('gazebo_ros'),
-            'launch',
-            'gazebo.launch.py'
-        )
+    # ======================================================
+    # Gazebo world
+    # ======================================================
+
+    world_file = os.path.join(
+        package_path,
+        "model",
+        "empty_world.world"
     )
 
 
-    gazeboLaunch = IncludeLaunchDescription(
-        gazebo_rosPackageLaunch,
+    gazebo_launch_file = os.path.join(
+        get_package_share_directory("gazebo_ros"),
+        "launch",
+        "gazebo.launch.py"
+    )
+
+
+    # ======================================================
+    # Gazebo
+    # ======================================================
+
+    gazebo = IncludeLaunchDescription(
+
+        PythonLaunchDescriptionSource(
+            gazebo_launch_file
+        ),
+
         launch_arguments={
-            'world': pathWorldFile
+            "world": world_file
         }.items()
+
     )
 
 
-    # Spawn du robot dans Gazebo
-    spawnModelNode = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=[
-            '-topic',
-            'robot_description',
-            '-entity',
-            robotXacroName
-        ],
-        output='screen'
-    )
-
-
+    # ======================================================
     # Robot State Publisher
-    nodeRobotStatePublisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        output='screen',
+    # ======================================================
+
+    robot_state_publisher = Node(
+
+        package="robot_state_publisher",
+
+        executable="robot_state_publisher",
+
+        name="robot_state_publisher",
+
+        output="screen",
+
+        parameters=[
+
+            {
+                "robot_description": robot_description,
+                "use_sim_time": True
+            }
+
+        ]
+
+    )
+
+
+    # ======================================================
+    # Spawn robot
+    # ======================================================
+
+    spawn_entity = Node(
+
+        package="gazebo_ros",
+
+        executable="spawn_entity.py",
+
+        arguments=[
+
+            "-topic",
+            "robot_description",
+
+            "-entity",
+            "differential_drive_robot"
+
+        ],
+
+        output="screen"
+
+    )
+
+
+    # ======================================================
+    # RViz
+    # ======================================================
+
+    rviz_config = os.path.join(
+        package_path,
+        "config",
+        "robot.rviz"
+    )
+
+
+    rviz = Node(
+
+        package="rviz2",
+
+        executable="rviz2",
+
+        name="rviz2",
+
+        arguments=[
+            "-d",
+            rviz_config
+        ],
+
         parameters=[
             {
-                'robot_description': robotDescription,
-                'use_sim_time': True
+                "use_sim_time": True
             }
-        ]
-    )
-# ---------------------------------------------
-    # NOUVEAU : Nœud pour lancer RViz2
-    # ---------------------------------------------
-    rvizNode = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        output='screen'
+        ],
+
+        output="screen"
+
     )
 
+
+    # ======================================================
+    # Launch
+    # ======================================================
+
     return LaunchDescription([
-        gazeboLaunch,
-        spawnModelNode,
-        nodeRobotStatePublisher,
-        rvizNode
+
+        gazebo,
+
+        robot_state_publisher,
+
+        spawn_entity,
+
+        rviz
+
     ])

@@ -1,390 +1,614 @@
 <?xml version="1.0"?>
 
 <robot name="differential_drive_robot"
-       xmlns:xacro="http://www.ros.org/wiki/xacro">
+    xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- Body dimensions -->
-  <xacro:property name="body_link_x_dim" value="1.0"/>
-  <xacro:property name="body_link_y_dim" value="0.6"/>
-  <xacro:property name="body_link_z_dim" value="0.3"/>
+  <!-- ====================================================== -->
 
-  <!-- Wheel dimensions -->
-  <xacro:property name="wheel_link_radius" value="0.15"/>
-  <xacro:property name="wheel_link_length" value="0.1"/>
-  <xacro:property name="wheel_link_z_location" value="-0.1"/>
+  <!-- PROPRIETES -->
 
-  <!-- Caster dimensions -->
-  <xacro:property name="caster_link_radius" value="0.15"/>
-  <xacro:property name="caster_link_z_location" value="-0.1"/>
+  <!-- ====================================================== -->
 
-  <!-- Material density -->
-  <xacro:property name="body_density" value="2710.0"/>
-  <xacro:property name="wheel_density" value="2710.0"/>
-  <xacro:property name="caster_density" value="2710.0"/>
+  <!-- Body -->
+
+<xacro:property name="body_link_x_dim" value="1.0"/>
+<xacro:property name="body_link_y_dim" value="0.6"/>
+<xacro:property name="body_link_z_dim" value="0.3"/>
+
+  <!-- Wheels -->
+
+<xacro:property name="wheel_link_radius" value="0.15"/>
+<xacro:property name="wheel_link_length" value="0.1"/>
+<xacro:property name="wheel_link_z_location" value="-0.1"/>
+
+  <!-- Caster -->
+
+<xacro:property name="caster_link_radius" value="0.15"/>
+<xacro:property name="caster_link_z_location" value="-0.1"/>
+
+  <!-- Density -->
+
+<xacro:property name="body_density" value="2710.0"/>
+<xacro:property name="wheel_density" value="2710.0"/>
+<xacro:property name="caster_density" value="2710.0"/>
 
   <!-- Pi -->
-  <xacro:property name="pi_const" value="3.14159265"/>
 
-  <!-- Mass calculation -->
-  <xacro:property name="body_mass"
-    value="${body_density*body_link_x_dim*body_link_y_dim*body_link_z_dim}"/>
+<xacro:property name="pi_const" value="3.14159265"/>
 
-  <xacro:property name="wheel_mass"
-    value="${wheel_density*pi_const*wheel_link_radius*wheel_link_radius*wheel_link_length}"/>
+  <!-- ====================================================== -->
 
-  <xacro:property name="caster_mass"
-    value="${caster_density*(4.0/3.0)*pi_const*caster_link_radius*caster_link_radius*caster_link_radius}"/>
+  <!-- MASSES -->
 
+  <!-- ====================================================== -->
 
-  <!-- Wheel inertia -->
-  <xacro:property name="Iz_wheel"
-    value="${0.5*wheel_mass*wheel_link_radius*wheel_link_radius}"/>
+<xacro:property name="body_mass"
+value="${body_density * body_link_x_dim * body_link_y_dim * body_link_z_dim}"/>
 
-  <xacro:property name="I_wheel"
-    value="${(1.0/12.0)*wheel_mass*(3.0*wheel_link_radius*wheel_link_radius+wheel_link_length*wheel_link_length)}"/>
+<xacro:property name="wheel_mass"
+value="${wheel_density * pi_const * wheel_link_radius * wheel_link_radius * wheel_link_length}"/>
 
+<xacro:property name="caster_mass"
+value="${caster_density * (4.0/3.0) * pi_const * caster_link_radius * caster_link_radius * caster_link_radius}"/>
 
-  <!-- Caster inertia -->
-  <xacro:property name="I_caster"
-    value="${(2.0/5.0)*caster_mass*caster_link_radius*caster_link_radius}"/>
+  <!-- ====================================================== -->
 
+  <!-- INERTIAS -->
 
-  <!-- Wheel inertia macro -->
-  <xacro:macro name="inertia_wheel">
+  <!-- ====================================================== -->
 
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="${wheel_mass}"/>
+<xacro:property name="Iz_wheel"
+value="${0.5 * wheel_mass * wheel_link_radius * wheel_link_radius}"/>
 
-      <inertia
-        ixx="${I_wheel}"
-        ixy="0"
-        ixz="0"
-        iyy="${I_wheel}"
-        iyz="0"
-        izz="${Iz_wheel}"/>
-    </inertial>
+<xacro:property name="I_wheel"
+value="${(1.0/12.0) * wheel_mass *
+(3.0 * wheel_link_radius * wheel_link_radius +
+wheel_link_length * wheel_link_length)}"/>
 
-  </xacro:macro>
+<xacro:property name="I_caster"
+value="${(2.0/5.0) * caster_mass *
+caster_link_radius * caster_link_radius}"/>
 
+  <!-- ====================================================== -->
 
-  <!-- Caster inertia macro -->
-  <xacro:macro name="inertia_caster">
+  <!-- WHEEL INERTIA MACRO -->
 
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="${caster_mass}"/>
+  <!-- ====================================================== -->
 
-      <inertia
-        ixx="${I_caster}"
-        ixy="0"
-        ixz="0"
-        iyy="${I_caster}"
-        iyz="0"
-        izz="${I_caster}"/>
-    </inertial>
+<xacro:macro name="inertia_wheel">
 
-  </xacro:macro>
-    <!-- Gazebo extra configuration -->
- <xacro:include filename="$(find my_robot)/model/robot.gazebo"/>
+```
+<inertial>
 
-  <!-- Dummy link required by Gazebo -->
-  <link name="dummy"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
 
-  <joint name="dummy_joint" type="fixed">
-    <parent link="dummy"/>
-    <child link="body_link"/>
+  <mass value="${wheel_mass}"/>
+
+  <inertia
+    ixx="${I_wheel}"
+    ixy="0"
+    ixz="0"
+    iyy="${I_wheel}"
+    iyz="0"
+    izz="${Iz_wheel}"/>
+
+</inertial>
+```
+
+</xacro:macro>
+
+  <!-- ====================================================== -->
+
+  <!-- CASTER INERTIA MACRO -->
+
+  <!-- ====================================================== -->
+
+<xacro:macro name="inertia_caster">
+
+```
+<inertial>
+
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <mass value="${caster_mass}"/>
+
+  <inertia
+    ixx="${I_caster}"
+    ixy="0"
+    ixz="0"
+    iyy="${I_caster}"
+    iyz="0"
+    izz="${I_caster}"/>
+
+</inertial>
+```
+
+</xacro:macro>
+
+  <!-- ====================================================== -->
+
+  <!-- GAZEBO -->
+
+  <!-- ====================================================== -->
+
+<xacro:include filename="$(find my_robot)/model/robot.gazebo"/>
+
+  <!-- ====================================================== -->
+
+  <!-- BASE LINK -->
+
+  <!-- ====================================================== -->
+
+  <!--
+       IMPORTANT :
+       base_link est le ROOT LINK.
+
+       Il ne contient PAS d'inertie.
+       Cela évite le problème KDL avec un root link ayant
+       une inertie.
+  -->
+
+  <link name="base_link"/>
+
+  <!-- ====================================================== -->
+
+  <!-- BASE -> BODY -->
+
+  <!-- ====================================================== -->
+
+  <joint name="base_to_body_joint" type="fixed">
+
+```
+<parent link="base_link"/>
+<child link="body_link"/>
+
+<origin
+  xyz="0 0 0"
+  rpy="0 0 0"/>
+```
+
   </joint>
 
+  <!-- ====================================================== -->
 
-  <!-- ===================== -->
-  <!-- Main body link -->
-  <!-- ===================== -->
+  <!-- BODY -->
+
+  <!-- ====================================================== -->
 
   <link name="body_link">
 
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+```
+<visual>
 
-      <geometry>
-        <box size="${body_link_x_dim}
-                   ${body_link_y_dim}
-                   ${body_link_z_dim}"/>
-      </geometry>
-    </visual>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <geometry>
+
+    <box
+      size="${body_link_x_dim}
+             ${body_link_y_dim}
+             ${body_link_z_dim}"/>
+
+  </geometry>
+
+  <material name="red">
+    <color rgba="1.0 0.0 0.0 1.0"/>
+  </material>
+
+</visual>
 
 
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+<collision>
 
-      <geometry>
-        <box size="${body_link_x_dim}
-                   ${body_link_y_dim}
-                   ${body_link_z_dim}"/>
-      </geometry>
-    </collision>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <geometry>
+
+    <box
+      size="${body_link_x_dim}
+             ${body_link_y_dim}
+             ${body_link_z_dim}"/>
+
+  </geometry>
+
+</collision>
 
 
-    <inertial>
+<inertial>
 
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
 
-      <mass value="${body_mass}"/>
+  <mass value="${body_mass}"/>
 
-      <inertia
-        ixx="${(1/12)*body_mass*(body_link_y_dim*body_link_y_dim + body_link_z_dim*body_link_z_dim)}"
-        ixy="0"
-        ixz="0"
-        iyy="${(1/12)*body_mass*(body_link_x_dim*body_link_x_dim + body_link_z_dim*body_link_z_dim)}"
-        iyz="0"
-        izz="${(1/12)*body_mass*(body_link_x_dim*body_link_x_dim + body_link_y_dim*body_link_y_dim)}"/>
+  <inertia
 
-    </inertial>
+    ixx="${(1.0/12.0) * body_mass *
+          (body_link_y_dim * body_link_y_dim +
+           body_link_z_dim * body_link_z_dim)}"
+
+    ixy="0"
+    ixz="0"
+
+    iyy="${(1.0/12.0) * body_mass *
+          (body_link_x_dim * body_link_x_dim +
+           body_link_z_dim * body_link_z_dim)}"
+
+    iyz="0"
+
+    izz="${(1.0/12.0) * body_mass *
+          (body_link_x_dim * body_link_x_dim +
+           body_link_y_dim * body_link_y_dim)}"/>
+
+</inertial>
+```
 
   </link>
 
+  <!-- ====================================================== -->
 
+  <!-- RIGHT WHEEL -->
 
-  <!-- ===================== -->
-  <!-- Right wheel -->
-  <!-- ===================== -->
-
+  <!-- ====================================================== -->
 
   <joint name="wheel1_joint" type="continuous">
 
-    <parent link="body_link"/>
-    <child link="wheel1_link"/>
+```
+<parent link="body_link"/>
+<child link="wheel1_link"/>
 
-    <origin
-      xyz="${-2*wheel_link_radius}
-           ${-body_link_y_dim/2-wheel_link_length/2}
-           ${wheel_link_z_location}"
-      rpy="0 0 0"/>
+<origin
+  xyz="${-2 * wheel_link_radius}
+       ${-body_link_y_dim/2 - wheel_link_length/2}
+       ${wheel_link_z_location}"
+  rpy="0 0 0"/>
 
-    <axis xyz="0 1 0"/>
+<axis xyz="0 1 0"/>
 
-    <limit effort="1000" velocity="1000"/>
+<limit
+  effort="1000"
+  velocity="1000"/>
 
-    <dynamics damping="1.0" friction="1.0"/>
+<dynamics
+  damping="1.0"
+  friction="1.0"/>
+```
 
   </joint>
-
-
 
   <link name="wheel1_link">
 
-    <visual>
+```
+<visual>
 
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+  <origin
+    xyz="0 0 0"
+    rpy="1.5708 0 0"/>
 
-      <geometry>
+  <geometry>
 
-        <cylinder
-          radius="${wheel_link_radius}"
-          length="${wheel_link_length}"/>
+    <cylinder
+      radius="${wheel_link_radius}"
+      length="${wheel_link_length}"/>
 
-      </geometry>
+  </geometry>
 
-    </visual>
+  <material name="yellow">
+    <color rgba="1.0 1.0 0.0 1.0"/>
+  </material>
 
-
-    <collision>
-
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-
-      <geometry>
-
-        <cylinder
-          radius="${wheel_link_radius}"
-          length="${wheel_link_length}"/>
-
-      </geometry>
-
-    </collision>
+</visual>
 
 
-    <xacro:inertia_wheel/>
+<collision>
+
+  <origin
+    xyz="0 0 0"
+    rpy="1.5708 0 0"/>
+
+  <geometry>
+
+    <cylinder
+      radius="${wheel_link_radius}"
+      length="${wheel_link_length}"/>
+
+  </geometry>
+
+</collision>
+
+
+<xacro:inertia_wheel/>
+```
 
   </link>
 
+  <!-- ====================================================== -->
 
+  <!-- LEFT WHEEL -->
 
-  <!-- ===================== -->
-  <!-- Left wheel -->
-  <!-- ===================== -->
-
+  <!-- ====================================================== -->
 
   <joint name="wheel2_joint" type="continuous">
 
-    <parent link="body_link"/>
+```
+<parent link="body_link"/>
+<child link="wheel2_link"/>
 
-    <child link="wheel2_link"/>
+<origin
+  xyz="${-2 * wheel_link_radius}
+       ${body_link_y_dim/2 + wheel_link_length/2}
+       ${wheel_link_z_location}"
+  rpy="0 0 0"/>
 
+<axis xyz="0 1 0"/>
 
-    <origin
-      xyz="${-2*wheel_link_radius}
-           ${body_link_y_dim/2+wheel_link_length/2}
-           ${wheel_link_z_location}"
-      rpy="0 0 0"/>
+<limit
+  effort="1000"
+  velocity="1000"/>
 
-
-    <axis xyz="0 1 0"/>
-
-
-    <limit effort="1000" velocity="1000"/>
-
-
-    <dynamics damping="1.0" friction="1.0"/>
+<dynamics
+  damping="1.0"
+  friction="1.0"/>
+```
 
   </joint>
-
-
 
   <link name="wheel2_link">
 
+```
+<visual>
 
-    <visual>
+  <origin
+    xyz="0 0 0"
+    rpy="1.5708 0 0"/>
 
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+  <geometry>
 
-      <geometry>
+    <cylinder
+      radius="${wheel_link_radius}"
+      length="${wheel_link_length}"/>
 
-        <cylinder
-          radius="${wheel_link_radius}"
-          length="${wheel_link_length}"/>
+  </geometry>
 
-      </geometry>
+  <material name="yellow">
+    <color rgba="1.0 1.0 0.0 1.0"/>
+  </material>
 
-    </visual>
-
-
-
-    <collision>
-
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-
-      <geometry>
-
-        <cylinder
-          radius="${wheel_link_radius}"
-          length="${wheel_link_length}"/>
-
-      </geometry>
-
-    </collision>
+</visual>
 
 
-    <xacro:inertia_wheel/>
+<collision>
+
+  <origin
+    xyz="0 0 0"
+    rpy="1.5708 0 0"/>
+
+  <geometry>
+
+    <cylinder
+      radius="${wheel_link_radius}"
+      length="${wheel_link_length}"/>
+
+  </geometry>
+
+</collision>
+
+
+<xacro:inertia_wheel/>
+```
 
   </link>
-    <!-- ===================== -->
-  <!-- Caster wheel -->
-  <!-- ===================== -->
+
+  <!-- ====================================================== -->
+
+  <!-- CASTER -->
+
+  <!-- ====================================================== -->
 
   <joint name="caster_joint" type="fixed">
 
-    <parent link="body_link"/>
+```
+<parent link="body_link"/>
+<child link="caster_link"/>
 
-    <child link="caster_link"/>
-
-    <origin
-      xyz="${2*caster_link_radius} 0 ${caster_link_z_location}"
-      rpy="0 0 0"/>
+<origin
+  xyz="${2 * caster_link_radius}
+       0
+       ${caster_link_z_location}"
+  rpy="0 0 0"/>
+```
 
   </joint>
-
-
 
   <link name="caster_link">
 
+```
+<visual>
 
-    <visual>
+  <origin
+    xyz="0 0 0"
+    rpy="0 0 0"/>
 
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+  <geometry>
 
-      <geometry>
+    <sphere
+      radius="${caster_link_radius}"/>
 
-        <sphere radius="${caster_link_radius}"/>
+  </geometry>
 
-      </geometry>
+  <material name="blue">
+    <color rgba="0.0 0.0 1.0 1.0"/>
+  </material>
 
-    </visual>
-
-
-
-    <collision>
-
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-
-      <geometry>
-
-        <sphere radius="${caster_link_radius}"/>
-
-      </geometry>
-
-    </collision>
+</visual>
 
 
+<collision>
 
-    <xacro:inertia_caster/>
+  <origin
+    xyz="0 0 0"
+    rpy="0 0 0"/>
+
+  <geometry>
+
+    <sphere
+      radius="${caster_link_radius}"/>
+
+  </geometry>
+
+</collision>
+
+
+<xacro:inertia_caster/>
+```
 
   </link>
-  <!-- ===================== -->
-  <!-- LiDAR Link & Joint -->
-  <!-- ===================== -->
+
+  <!-- ====================================================== -->
+
+  <!-- LIDAR -->
+
+  <!-- ====================================================== -->
+
   <joint name="lidar_joint" type="fixed">
-    <parent link="body_link"/>
-    <child link="lidar_link"/>
-    <origin xyz="0.3 0 0.2" rpy="0 0 0"/>
+
+```
+<parent link="base_link"/>
+<child link="lidar_link"/>
+
+<origin
+  xyz="0.3 0 0.2"
+  rpy="0 0 0"/>
+```
+
   </joint>
 
   <link name="lidar_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.05" length="0.04"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.05" length="0.04"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
-    </inertial>
+
+```
+<visual>
+
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <geometry>
+
+    <cylinder
+      radius="0.05"
+      length="0.04"/>
+
+  </geometry>
+
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+</visual>
+
+
+<collision>
+
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <geometry>
+
+    <cylinder
+      radius="0.05"
+      length="0.04"/>
+
+  </geometry>
+
+</collision>
+
+
+<inertial>
+
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <mass value="0.1"/>
+
+  <inertia
+    ixx="0.0001"
+    ixy="0"
+    ixz="0"
+    iyy="0.0001"
+    iyz="0"
+    izz="0.0001"/>
+
+</inertial>
+```
+
   </link>
 
+  <!-- ====================================================== -->
 
-  <!-- ===================== -->
-  <!-- Camera Link & Joint -->
-  <!-- ===================== -->
+  <!-- CAMERA -->
+
+  <!-- ====================================================== -->
+
   <joint name="camera_joint" type="fixed">
-    <parent link="body_link"/>
-    <child link="camera_link"/>
-    <origin xyz="0.5 0 0.1" rpy="0 0 0"/>
+
+```
+<parent link="base_link"/>
+<child link="camera_link"/>
+
+<origin
+  xyz="0.5 0 0.1"
+  rpy="0 0 0"/>
+```
+
   </joint>
 
   <link name="camera_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.05 0.05 0.05"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.05 0.05 0.05"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.05"/>
-      <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
-    </inertial>
-  </link>
 
+```
+<visual>
+
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <geometry>
+
+    <box
+      size="0.05 0.05 0.05"/>
+
+  </geometry>
+
+  <material name="blue">
+    <color rgba="0.0 0.0 1.0 1.0"/>
+  </material>
+
+</visual>
+
+
+<collision>
+
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <geometry>
+
+    <box
+      size="0.05 0.05 0.05"/>
+
+  </geometry>
+
+</collision>
+
+
+<inertial>
+
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+
+  <mass value="0.05"/>
+
+  <inertia
+    ixx="0.00001"
+    ixy="0"
+    ixz="0"
+    iyy="0.00001"
+    iyz="0"
+    izz="0.00001"/>
+
+</inertial>
+```
+
+  </link>
 
 </robot>

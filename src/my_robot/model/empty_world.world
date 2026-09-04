@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+
+    <!-- Source de lumière globale -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- Le sol de la simulation -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- ================================= -->
+    <!-- 6 CÔNES BIEN ESPACÉS              -->
+    <!-- ================================= -->
+
+    <!-- 1. Devant, au centre -->
+    <include>
+      <name>cone_1</name>
+      <uri>model://construction_cone</uri>
+      <pose>2.5 0.0 0 0 0 0</pose>
+    </include>
+
+    <!-- 2. Devant à gauche -->
+    <include>
+      <name>cone_2</name>
+      <uri>model://construction_cone</uri>
+      <pose>2.0 1.5 0 0 0 0</pose>
+    </include>
+
+    <!-- 3. Devant à droite -->
+    <include>
+      <name>cone_3</name>
+      <uri>model://construction_cone</uri>
+      <pose>2.0 -1.5 0 0 0 0</pose>
+    </include>
+
+    <!-- 4. Sur le côté gauche -->
+    <include>
+      <name>cone_4</name>
+      <uri>model://construction_cone</uri>
+      <pose>0.5 2.5 0 0 0 0</pose>
+    </include>
+
+    <!-- 5. Sur le côté droit -->
+    <include>
+      <name>cone_5</name>
+      <uri>model://construction_cone</uri>
+      <pose>0.5 -2.5 0 0 0 0</pose>
+    </include>
+
+    <!-- 6. Plus loin devant en diagonale -->
+    <include>
+      <name>cone_6</name>
+      <uri>model://construction_cone</uri>
+      <pose>3.5 1.2 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>

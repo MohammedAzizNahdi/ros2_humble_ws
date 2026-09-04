@@ -1,25 +1,96 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd"
+            schematypens="http://www.w3.org/2001/XMLSchema"?>
+
 <package format="3">
+
+  <!-- ====================================================== -->
+  <!-- PACKAGE INFORMATION -->
+  <!-- ====================================================== -->
+
   <name>my_robot</name>
+
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="MohammedAziz.Nahdi@esprit.tn">aziz</maintainer>
+
+  <description>
+    Differential drive robot with Gazebo, LiDAR, camera and SLAM.
+  </description>
+
+  <maintainer email="MohammedAziz.Nahdi@esprit.tn">
+    aziz
+  </maintainer>
+
   <license>Apache-2.0</license>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
-      
-<exec_depend>joint_state_publisher</exec_depend>
-<exec_depend>robot_state_publisher</exec_depend>
-<exec_depend>gazebo_ros</exec_depend>
-<exec_depend>xacro</exec_depend>
-<exec_depend>ros_gz_bridge</exec_depend>
 
+  <!-- ====================================================== -->
+  <!-- BUILD SYSTEM -->
+  <!-- ====================================================== -->
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+
+  <!-- ====================================================== -->
+  <!-- C++ NODE DEPENDENCIES -->
+  <!-- ====================================================== -->
+
+  <depend>rclcpp</depend>
+
+  <depend>std_msgs</depend>
+
+  <depend>sensor_msgs</depend>
+
+
+  <!-- ====================================================== -->
+  <!-- ROBOT DESCRIPTION / TF -->
+  <!-- ====================================================== -->
+
+  <exec_depend>xacro</exec_depend>
+
+  <exec_depend>robot_state_publisher</exec_depend>
+
+  <exec_depend>joint_state_publisher</exec_depend>
+
+
+  <!-- ====================================================== -->
+  <!-- GAZEBO CLASSIC -->
+  <!-- ====================================================== -->
+
+  <exec_depend>gazebo_ros</exec_depend>
+
+
+  <!-- ====================================================== -->
+  <!-- RVIZ -->
+  <!-- ====================================================== -->
+
+  <exec_depend>rviz2</exec_depend>
+
+
+  <!-- ====================================================== -->
+  <!-- SLAM -->
+  <!-- ====================================================== -->
+
+  <exec_depend>slam_toolbox</exec_depend>
+
+
+  <!-- ====================================================== -->
+  <!-- TESTS -->
+  <!-- ====================================================== -->
 
   <test_depend>ament_lint_auto</test_depend>
+
   <test_depend>ament_lint_common</test_depend>
 
+
+  <!-- ====================================================== -->
+  <!-- EXPORT -->
+  <!-- ====================================================== -->
+
   <export>
+
     <build_type>ament_cmake</build_type>
+
   </export>
+
 </package>
